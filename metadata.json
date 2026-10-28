@@ -1,0 +1,6 @@
+{
+  "name": "D2R to Traderie Auto-Lister & OCR Pro",
+  "description": "Diablo II: Resurrected jewel and item scanner with high-accuracy Exocet OCR parsing and seamless 1-click Traderie autofill integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
