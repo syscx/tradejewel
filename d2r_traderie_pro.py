@@ -45,6 +45,7 @@ DEFAULT_LEAGUE = "Non-Ladder"   # "Non-Ladder" or "Ladder"
 DEFAULT_MODE = "Softcore"       # "Softcore" or "Hardcore"
 DEFAULT_PLATFORM = "PC"         # "PC", "PlayStation", "Xbox", "Switch"
 BASE_PRICE_JAH = 2
+DEBUG_CAPTURE_FILES = False  # Enable only when troubleshooting OCR/cropping.
 
 # Configure Tesseract path if available
 if os.path.exists(TESSERACT_PATH):
@@ -52,18 +53,8 @@ if os.path.exists(TESSERACT_PATH):
 else:
     print(f"[Notice] Tesseract path '{TESSERACT_PATH}' not found directly. Will use PATH if configured.")
 
-# Shared memory for the latest scanned jewel
-latest_scanned_jewel = {
-    "itemName": "Unknown Jewel",
-    "rarity": "rare",
-    "levelReq": 42,
-    "ladder": DEFAULT_LEAGUE,
-    "mode": DEFAULT_MODE,
-    "platform": DEFAULT_PLATFORM,
-    "stats": [],
-    "price": {"currency": "Jah", "quantity": BASE_PRICE_JAH},
-    "rawText": "",
-}
+# Only a successful F10 scan may populate this value. Never prefill demo data.
+latest_scanned_jewel = None
 
 
 # Set Windows DPI Awareness so mouse coordinates exactly match screen pixel coordinates
