@@ -12,7 +12,6 @@ export function generatePythonScript(config: ScriptConfig): string {
   4. Instant 100% Reliable Traderie Auto-Fill via Local Web Bridge (Port ${config.serverPort})
      - Zero tab-blind guessing! Form fills in 0.2s via companion Tampermonkey script/Bookmarklet.
   5. Fallback Smart Typing Mode (Dynamic loop + clipboard paste to avoid IME glitches)
-  6. Optional Gemini Vision Engine (100% accuracy, no local OCR engine needed if API key set)
 ================================================================================
 """
 
@@ -31,12 +30,7 @@ import pyautogui
 import pyperclip
 
 try:
-    import pygetwindow as gw
-except ImportError:
-    gw = None
-
-try:
-    from PIL import ImageGrab, Image
+    from PIL import ImageGrab
 except ImportError:
     print("[Error] Pillow is required: pip install pillow")
     sys.exit(1)
@@ -173,7 +167,6 @@ def preprocess_image_for_tesseract(img_bgr):
     cv2.imwrite("debug_ocr_preprocessed.png", inv_thresh)
 
     return inv_thresh, scaled
-    return img_path
 
 
 # ==============================================================================
@@ -411,17 +404,7 @@ def parse_d2r_jewel(ocr_text):
             "display": f"+{fhr_val}% Faster Hit Recovery"
         })
 
-    # 9. Life
-    life_val = extract_first_number(r"(\\d+)[^\\d\\n]*(?:TO\\s+)?LIFE|\\bLIFE[^\\d\\n]*(\\d+)", clean)
-    if life_val is not None:
-        stats.append({
-            "statName": "Life",
-            "traderieOption": "+X to Life",
-            "value": life_val,
-            "display": f"+{life_val} to Life"
-        })
-
-    # 10. Strength
+    # 9. Strength
     str_val = extract_first_number(r"(\\d+)[^\\d\\n]*(?:TO\\s+)?STRENGTH|\\bSTRENGTH[^\\d\\n]*(\\d+)", clean)
     if str_val is not None:
         stats.append({
@@ -431,7 +414,7 @@ def parse_d2r_jewel(ocr_text):
             "display": f"+{str_val} to Strength"
         })
 
-    # 11. Dexterity
+    # 10. Dexterity
     dex_val = extract_first_number(r"(\\d+)[^\\d\\n]*(?:TO\\s+)?DEXTERITY|\\bDEXTERITY[^\\d\\n]*(\\d+)", clean)
     if dex_val is not None:
         stats.append({

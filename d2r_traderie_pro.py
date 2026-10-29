@@ -26,12 +26,7 @@ import pyautogui
 import pyperclip
 
 try:
-    import pygetwindow as gw
-except ImportError:
-    gw = None
-
-try:
-    from PIL import ImageGrab, Image
+    from PIL import ImageGrab
 except ImportError:
     print("[Error] Pillow is required: pip install pillow")
     sys.exit(1)
@@ -75,8 +70,6 @@ latest_scanned_jewel = {
 }
 
 
-def capture_d2r_window(save_path="d2r_capture.png"):
-    """DPI-aware screenshot capture of D2R window or active mouse zone"""
 # Set Windows DPI Awareness so mouse coordinates exactly match screen pixel coordinates
 try:
     import ctypes
