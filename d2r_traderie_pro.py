@@ -82,7 +82,8 @@ def capture_and_crop_tooltip(output_path="tooltip_crop.png"):
 
     # 1. Capture full screen
     full_screenshot = ImageGrab.grab()
-    full_screenshot.save("debug_fullscreen.png")
+    if DEBUG_CAPTURE_FILES:
+        full_screenshot.save("debug_fullscreen.png")
     
     img = np.array(full_screenshot)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
@@ -96,7 +97,8 @@ def capture_and_crop_tooltip(output_path="tooltip_crop.png"):
     y2 = min(h_img, my + 140)
 
     mouse_zone = img[y1:y2, x1:x2]
-    cv2.imwrite("debug_mouse_zone.png", mouse_zone)
+    if DEBUG_CAPTURE_FILES:
+        cv2.imwrite("debug_mouse_zone.png", mouse_zone)
     print(f"[Zone Grab] Captured 680x580 region around mouse cursor.")
 
     # 3. Locate the dark tooltip rectangle inside this mouse zone
@@ -132,7 +134,8 @@ def capture_and_crop_tooltip(output_path="tooltip_crop.png"):
         print("[Crop Note] Used mouse zone directly as tooltip ROI.")
         cropped = mouse_zone
 
-    cv2.imwrite(output_path, cropped)
+    if DEBUG_CAPTURE_FILES:
+        cv2.imwrite(output_path, cropped)
     return output_path, cropped
 
 
@@ -151,7 +154,8 @@ def preprocess_image_for_tesseract(img_bgr):
     
     # Inverted threshold for Tesseract (Black text on white background)
     _, inv_thresh = cv2.threshold(enhanced, 70, 255, cv2.THRESH_BINARY)
-    cv2.imwrite("debug_ocr_preprocessed.png", inv_thresh)
+    if DEBUG_CAPTURE_FILES:
+        cv2.imwrite("debug_ocr_preprocessed.png", inv_thresh)
 
     return inv_thresh, scaled
 
@@ -469,13 +473,20 @@ def on_capture_pressed():
             return
 
         print("\n--- [Detected Raw OCR Text] ---")
-        if raw_ocr.strip():
-            print(raw_ocr.strip())
-        else:
-            print("(No text recognized - please check 'debug_mouse_zone.png' and 'tooltip_crop.png')")
+        if not raw_ocr.strip():
+            print("(No text recognized. The previous valid scan is preserved.)")
+            print("-------------------------------")
+            return
+        print(raw_ocr.strip())
         print("-------------------------------\n")
 
         parsed_data = parse_d2r_jewel(raw_ocr)
+        if not parsed_data["stats"]:
+            print("[Scan rejected] No recognizable jewel stats found; previous valid scan is preserved.")
+            print("Enable DEBUG_CAPTURE_FILES and scan again if you need diagnostic images.")
+            return
+
+        # Store only after OCR produced at least one parsed stat.
         latest_scanned_jewel = parsed_data
 
         try:
@@ -490,8 +501,6 @@ def on_capture_pressed():
         if parsed_data["stats"]:
             for s in parsed_data["stats"]:
                 print(f"   • {s['display']}  --> [Traderie: '{s['traderieOption']}']")
-        else:
-            print("   ⚠️ No affixes recognized. Open 'debug_mouse_zone.png' to see captured mouse region.")
         print(f"💰 Auto Price: {parsed_data['price']['quantity']} {parsed_data['price']['currency']}")
         print("========================================================")
         print(f"✅ Ready! Press [{HOTKEY_TYPING_FALLBACK.upper()}] to auto-type this jewel into Traderie.")
@@ -502,20 +511,16 @@ def on_capture_pressed():
 
 def on_typing_fallback_pressed():
     global latest_scanned_jewel
-    stats = latest_scanned_jewel.get("stats", [])
 
     print("\n" + "=" * 55)
     print("⌨️  [F9 Triggered] Keyboard Autofill Mode")
     print("=" * 55)
 
-    if not stats:
-        print("⚠️  [NOTICE] No jewel stats currently in memory!")
-        print("   Did you hover over a jewel in D2R and press [F10] first?")
-        print("   -> Using sample test jewel (15% IAS / 40% ED) so you can test typing into Traderie.")
-        stats = [
-            {"statName": "Increased Attack Speed", "searchKeyword": "Increased Attack Speed", "traderieOption": "+X% Increased Attack Speed", "value": 15, "display": "+15% Increased Attack Speed"},
-            {"statName": "Enhanced Damage", "searchKeyword": "Enhanced Damage", "traderieOption": "+X% Enhanced Damage", "value": 40, "display": "+40% Enhanced Damage"},
-        ]
+    if not latest_scanned_jewel or not latest_scanned_jewel.get("stats"):
+        print("[F9 cancelled] No valid jewel is stored. Hover over a jewel and press [F10] first.")
+        return
+
+    stats = latest_scanned_jewel["stats"]
 
     print("\n【請注意】請在 4 秒內將視窗切換到 Traderie 網頁！")
     print("請將游標點擊在網頁第一個屬性搜尋欄位 (例如 Modifier / Search properties 搜尋框)。")
