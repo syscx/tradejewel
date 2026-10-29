@@ -169,7 +169,7 @@ export const ScriptViewerTab: React.FC<ScriptViewerTabProps> = ({ config, setCon
             <span>Press F10 in D2R</span>
           </div>
           <div className="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 font-mono text-[11px] text-emerald-400">
-            F10 → Instant Traderie Auto-fill
+            F10 → OCR & Store
           </div>
           <p className="text-[11px] text-zinc-500 leading-normal">
             Hover mouse over a jewel in D2R and press F10 to scan it, then switch to Traderie and press F9 to auto-type the result.
