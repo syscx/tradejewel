@@ -41,7 +41,6 @@ export interface ScriptConfig {
   tesseractPath: string;
   autoPriceEnabled: boolean;
   basePriceJah: number;
-  serverPort: number;
   targetLeague: 'Non-Ladder' | 'Ladder';
   targetMode: 'Softcore' | 'Hardcore';
   targetPlatform: 'PC' | 'PlayStation' | 'Xbox' | 'Switch';

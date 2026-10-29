@@ -10,8 +10,8 @@ export const CodeComparisonTab: React.FC = () => {
       title: 'Traderie Input Automation (The Core Goal)',
       flaw: 'Blind PyAutoGUI Keystrokes & Hardcoded Sleep',
       flawDesc: 'Your original code used 20+ sequential `pyautogui.press("tab")` and `time.sleep(0.5)`. On Traderie (a dynamic React SPA), any dropdown animation lag, cookies banner, or DOM update causes tabs to de-sync, typing numbers into random boxes or breaking the listing.',
-      fix: 'Local Web Bridge + Tampermonkey / Bookmarklet',
-      fixDesc: 'The improved script launches a zero-dependency lightweight HTTP server (`127.0.0.1:8765`). When you hit F10 in game, Traderie receives the exact JSON and sets React input states directly in 0.1s with zero mouse/keyboard interference.',
+      fix: 'Clipboard-Paste Auto-Typing (F9)',
+      fixDesc: 'F10 scans and parses the jewel into memory. F9 then walks the Traderie form with Tab/Shift+Tab and pastes each value via Ctrl+V, which is immune to IME interference and avoids blind coordinate guessing.',
     },
     {
       title: 'Hardcoded Stats Bug',
@@ -38,8 +38,8 @@ export const CodeComparisonTab: React.FC = () => {
       title: 'Windows IME / Half-Width Typing Conflicts',
       flaw: '`pyautogui.write()` corrupted by IME',
       flawDesc: 'Your original code noted: "確保輸入法為英文半形". If the user had a Chinese/CJK input method active, `pyautogui.write()` would trigger phonetic menus or drop characters.',
-      fix: 'Direct Browser Ingestion or Clipboard (Ctrl+V) Fallback',
-      fixDesc: 'The web bridge bypasses typing completely. If the user chooses the keyboard fallback, it copies values to clipboard and pastes (`Ctrl+V`), immune to IME interference.',
+      fix: 'Clipboard Paste (Ctrl+V) Auto-Typing',
+      fixDesc: 'F9 copies each value to the clipboard and pastes it with Ctrl+V instead of typing characters, so Chinese/CJK input methods cannot corrupt the input.',
     },
   ];
 
@@ -117,7 +117,7 @@ export const CodeComparisonTab: React.FC = () => {
               <tr>
                 <td className="py-2.5 font-medium">Traderie Input Reliability</td>
                 <td className="py-2.5 text-red-400 font-mono">~20% (De-syncs easily)</td>
-                <td className="py-2.5 text-emerald-400 font-mono">100% (Direct DOM/State Bridge)</td>
+                <td className="py-2.5 text-emerald-400 font-mono">Reliable (Clipboard paste, IME-safe)</td>
               </tr>
               <tr>
                 <td className="py-2.5 font-medium">Affix Range</td>
@@ -132,12 +132,12 @@ export const CodeComparisonTab: React.FC = () => {
               <tr>
                 <td className="py-2.5 font-medium">Language/IME Compatibility</td>
                 <td className="py-2.5 text-red-400">Fails if non-English IME is on</td>
-                <td className="py-2.5 text-emerald-400">Fully immune (JSON / Clipboard)</td>
+                <td className="py-2.5 text-emerald-400">Fully immune (Ctrl+V paste)</td>
               </tr>
               <tr>
                 <td className="py-2.5 font-medium">Fill Speed</td>
                 <td className="py-2.5 text-red-400">~15 seconds of blind tabbing</td>
-                <td className="py-2.5 text-emerald-400">&lt; 0.25 seconds</td>
+                <td className="py-2.5 text-emerald-400">A few seconds (sequential paste)</td>
               </tr>
             </tbody>
           </table>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, Terminal, Globe, ArrowRightLeft, ShieldCheck, Flame, HelpCircle } from 'lucide-react';
+import { Sparkles, Terminal, ArrowRightLeft, ShieldCheck, Flame, HelpCircle } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'scanner' | 'python' | 'userscript' | 'comparison';
-  setActiveTab: (tab: 'scanner' | 'python' | 'userscript' | 'comparison') => void;
+  activeTab: 'scanner' | 'python' | 'comparison';
+  setActiveTab: (tab: 'scanner' | 'python' | 'comparison') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Scanner &amp; Bridge</span>
+              <span>Scanner</span>
             </button>
 
             <button
@@ -56,18 +56,6 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             >
               <Terminal className="w-3.5 h-3.5" />
               <span>Improved Python Script</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('userscript')}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activeTab === 'userscript'
-                  ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Traderie Userscript</span>
             </button>
 
             <button
@@ -146,9 +134,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 <div className="font-semibold text-amber-300">🎮 Required Game &amp; Browser Setup:</div>
                 <ul className="list-disc list-inside space-y-1 text-zinc-300">
                   <li>In D2R Options → Video: Set to <b>Windowed</b> or <b>Borderless Windowed</b>.</li>
-                  <li>Install <b>Tampermonkey</b> extension in Chrome / Edge, then add <code className="text-amber-300">traderie_d2r_autofill.user.js</code> (or use the Bookmarklet).</li>
-                  <li>Hover mouse over any jewel in D2R and press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F10</kbd>.</li>
-                  <li>Switch to Traderie listing page — it auto-fills all fields in 0.2s!</li>
+                  <li>Hover mouse over any jewel in D2R and press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F10</kbd> to scan it.</li>
+                  <li>Switch to the Traderie listing page, click the first modifier search field, then press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F9</kbd> to auto-fill.</li>
                 </ul>
               </div>
             </div>

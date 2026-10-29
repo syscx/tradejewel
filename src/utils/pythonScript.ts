@@ -9,9 +9,8 @@ export function generatePythonScript(config: ScriptConfig): string {
   1. High-Precision Tooltip Cropping (Cursor-aware & adaptive thresholding)
   2. Full D2R Exocet Font Dictionary & De-noising (IAS, ED, Resists, Life, Str, Dex, FHR, -Req)
   3. No More Hardcoded Dummy Stats (Dynamic affix extraction)
-  4. Instant 100% Reliable Traderie Auto-Fill via Local Web Bridge (Port ${config.serverPort})
-     - Zero tab-blind guessing! Form fills in 0.2s via companion Tampermonkey script/Bookmarklet.
-  5. Fallback Smart Typing Mode (Dynamic loop + clipboard paste to avoid IME glitches)
+  4. F10 Capture & Parse: scan the jewel tooltip, OCR, and store the result
+  5. F9 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
 ================================================================================
 """
 
@@ -20,8 +19,6 @@ import sys
 import re
 import json
 import time
-import threading
-from http.server import HTTPServer, BaseHTTPRequestHandler
 
 import cv2
 import numpy as np
@@ -44,7 +41,6 @@ except ImportError:
 # CONFIGURATION
 # ==============================================================================
 TESSERACT_PATH = r"${config.tesseractPath}"
-LOCAL_BRIDGE_PORT = ${config.serverPort}
 HOTKEY_CAPTURE = "${config.hotkeyCapture}"
 HOTKEY_TYPING_FALLBACK = "${config.hotkeyFill}"
 DEFAULT_LEAGUE = "${config.targetLeague}"       # "Non-Ladder" or "Ladder"
@@ -71,7 +67,6 @@ latest_scanned_jewel = {
     "stats": [],
     "price": {"currency": "Jah", "quantity": BASE_PRICE_JAH},
     "rawText": "",
-    "timestamp": 0
 }
 
 
@@ -452,43 +447,7 @@ def parse_d2r_jewel(ocr_text):
 
 
 # ==============================================================================
-# 3. LOCAL HTTP BRIDGE SERVER (Direct Browser Autofill without typing glitches!)
-# ==============================================================================
-class TraderieBridgeHandler(BaseHTTPRequestHandler):
-    """
-    Lightweight bridge serving parsed jewel data directly to
-    the Traderie Tampermonkey script or Bookmarklet running in your browser.
-    """
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.end_headers()
-
-    def do_GET(self):
-        global latest_scanned_jewel
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write(json.dumps(latest_scanned_jewel).encode("utf-8"))
-
-    def log_message(self, format, *args):
-        # Silence standard HTTP access logging in terminal
-        return
-
-
-def start_local_bridge(port=LOCAL_BRIDGE_PORT):
-    server = HTTPServer(("127.0.0.1", port), TraderieBridgeHandler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    print(f"[*] Local Traderie Bridge running at http://127.0.0.1:{port}")
-    print("    -> Tampermonkey / Bookmarklet will auto-fetch items from this bridge!")
-
-
-# ==============================================================================
-# 4. ACTIONS & HOTKEY HANDLERS
+# 3. ACTIONS & HOTKEY HANDLERS
 # ==============================================================================
 def on_capture_pressed():
     global latest_scanned_jewel
@@ -547,8 +506,7 @@ def on_capture_pressed():
             print("   ⚠️ No affixes recognized. Open 'debug_mouse_zone.png' to inspect captured region.")
         print(f"💰 Auto Price: {parsed_data['price']['quantity']} {parsed_data['price']['currency']}")
         print("========================================================")
-        print("✅ Ready! Traderie browser tab with Tampermonkey will auto-fill,")
-        print(f"   OR press [{HOTKEY_TYPING_FALLBACK.upper()}] to type into Traderie now.")
+        print(f"✅ Ready! Press [{HOTKEY_TYPING_FALLBACK.upper()}] to auto-type this jewel into Traderie.")
 
     except Exception as e:
         print(f"[Error during scan] {e}")
@@ -657,13 +615,10 @@ if __name__ == "__main__":
     print("   1. Open Diablo II: Resurrected in Windowed or Borderless Window.")
     print("   2. Hover over any Jewel or Item in your inventory or stash.")
     print(f"   3. Press [{HOTKEY_CAPTURE.upper()}] to scan, crop & parse stats.")
-    print("   4. On Traderie (traderie.com/diablo_2_resurrected/listing/create),")
-    print("      the companion script will auto-fill ALL fields automatically!")
-    print(f"   5. Press [{HOTKEY_TYPING_FALLBACK.upper()}] for manual keyboard typing fallback.")
-    print("   6. Press [Ctrl + C] in this console to exit.")
+    print("   4. Switch to the Traderie create-listing page, click the first")
+    print(f"      modifier search field, then press [{HOTKEY_TYPING_FALLBACK.upper()}] to auto-fill.")
+    print("   5. Press [Ctrl + C] in this console to exit.")
     print("=" * 64)
-
-    start_local_bridge(LOCAL_BRIDGE_PORT)
 
     keyboard.add_hotkey(HOTKEY_CAPTURE, on_capture_pressed)
     keyboard.add_hotkey(HOTKEY_TYPING_FALLBACK, on_typing_fallback_pressed)

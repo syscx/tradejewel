@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { ScannerTab } from './components/ScannerTab';
 import { ScriptViewerTab } from './components/ScriptViewerTab';
-import { UserScriptTab } from './components/UserScriptTab';
 import { CodeComparisonTab } from './components/CodeComparisonTab';
 import { TraderieSimulator } from './components/TraderieSimulator';
 import { SAMPLE_JEWELS } from './data/sampleJewels';
@@ -15,7 +14,7 @@ import { ParsedJewel, ScriptConfig } from './types';
 import { Sparkles, Terminal, Globe, ArrowRightLeft, Play } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'scanner' | 'python' | 'userscript' | 'comparison' | 'simulator'>('scanner');
+  const [activeTab, setActiveTab] = useState<'scanner' | 'python' | 'comparison' | 'simulator'>('scanner');
   const [activeJewel, setActiveJewel] = useState<ParsedJewel>(SAMPLE_JEWELS[0].parsed);
 
   const [scriptConfig, setScriptConfig] = useState<ScriptConfig>({
@@ -24,7 +23,6 @@ export default function App() {
     tesseractPath: 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe',
     autoPriceEnabled: true,
     basePriceJah: 2,
-    serverPort: 8765,
     targetLeague: 'Non-Ladder',
     targetMode: 'Softcore',
     targetPlatform: 'PC',
@@ -81,10 +79,6 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'userscript' && (
-          <UserScriptTab serverPort={scriptConfig.serverPort} />
-        )}
-
         {activeTab === 'comparison' && (
           <CodeComparisonTab />
         )}
@@ -97,7 +91,7 @@ export default function App() {
             <span className="w-2 h-2 rounded-full bg-amber-500" />
             <span>D2R to Traderie Auto-Lister Pro</span>
             <span>•</span>
-            <span className="text-zinc-400">Exocet OCR + Local Bridge Architecture</span>
+            <span className="text-zinc-400">Exocet OCR + F9 Auto-Type</span>
           </div>
 
           <div className="flex items-center space-x-4">
