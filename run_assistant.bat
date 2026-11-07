@@ -6,7 +6,7 @@ title D2R to Traderie Pro Assistant
 echo ===================================================
 echo   Starting D2R to Traderie Pro Assistant...
 echo   Folder: %~dp0
-echo   (Press F9 in D2R to scan, F10 to auto-fill)
+echo   (Press F7 in D2R to scan, F9 to auto-fill)
 echo ===================================================
 echo.
 

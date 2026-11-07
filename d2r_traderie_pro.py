@@ -6,8 +6,8 @@
   1. High-Precision Tooltip Cropping (Cursor-aware & adaptive thresholding)
   2. Full D2R Exocet Font Dictionary & De-noising (IAS, ED, Resists, Life, Str, Dex, FHR, -Req)
   3. No More Hardcoded Dummy Stats (Dynamic affix extraction)
-  4. F9 Capture & Parse: scan the jewel tooltip, OCR, and store the result
-  5. F10 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
+  4. F7 Capture & Parse: scan the jewel tooltip, OCR, and store the result
+  5. F9 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
 ================================================================================
 """
 
@@ -39,8 +39,8 @@ except ImportError:
 # CONFIGURATION
 # ==============================================================================
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-HOTKEY_SCAN = "f9"
-HOTKEY_AUTOFILL = "f10"
+HOTKEY_SCAN = "f7"
+HOTKEY_AUTOFILL = "f9"
 DEFAULT_LEAGUE = "Non-Ladder"   # "Non-Ladder" or "Ladder"
 DEFAULT_MODE = "Softcore"       # "Softcore" or "Hardcore"
 DEFAULT_PLATFORM = "PC"         # "PC", "PlayStation", "Xbox", "Switch"

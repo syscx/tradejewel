@@ -45,7 +45,7 @@ export const ScriptViewerTab: React.FC<ScriptViewerTabProps> = ({ config, setCon
             </h2>
           </div>
           <p className="text-xs text-zinc-400 mt-1 max-w-2xl leading-relaxed">
-            Every flaw of your original script has been fixed: no hardcoded Requirement 15 or Poison 20, robust DPI-aware cropping, full Exocet OCR dictionary, and IME-safe F10 clipboard-paste auto-typing.
+            Every flaw of your original script has been fixed: no hardcoded Requirement 15 or Poison 20, robust DPI-aware cropping, full Exocet OCR dictionary, and IME-safe F9 clipboard-paste auto-typing.
           </p>
         </div>
 
@@ -159,20 +159,20 @@ export const ScriptViewerTab: React.FC<ScriptViewerTabProps> = ({ config, setCon
             python d2r_traderie_pro.py
           </div>
           <p className="text-[11px] text-zinc-500 leading-normal">
-            Run your terminal / PowerShell as Administrator so global hotkeys (F9 and F10) work while Diablo II is focused.
+            Run your terminal / PowerShell as Administrator so global hotkeys (F7 and F9) work while Diablo II is focused.
           </p>
         </div>
 
         <div className="bg-zinc-900/80 rounded-2xl p-4 border border-zinc-800 space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-amber-400 font-mono">
             <span className="w-5 h-5 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-[10px]">3</span>
-            <span>Press F9 in D2R</span>
+            <span>Press F7 in D2R</span>
           </div>
           <div className="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 font-mono text-[11px] text-emerald-400">
-            F9 → OCR & Store
+            F7 → OCR & Store
           </div>
           <p className="text-[11px] text-zinc-500 leading-normal">
-            Hover mouse over a jewel in D2R and press F9 to scan it, then switch to Traderie and press F10 to auto-type the result.
+            Hover mouse over a jewel in D2R and press F7 to scan it, then switch to Traderie and press F9 to auto-type the result.
           </p>
         </div>
       </div>
