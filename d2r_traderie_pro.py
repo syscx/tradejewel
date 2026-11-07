@@ -17,6 +17,7 @@ import re
 import json
 import time
 import copy
+import threading
 
 import cv2
 import numpy as np
@@ -549,190 +550,158 @@ def on_scan_pressed():
 
 
 def on_autofill_pressed():
-    global latest_scanned_jewel
-
     if not AUTOFILL_LOCK.acquire(blocking=False):
         print("[F9 cancelled] An autofill is already running.")
         return
 
-    # The scan result is replaced as one object; deep-copy it once so a new F7
-    # scan cannot change the values halfway through this listing operation.
-    jewel = copy.deepcopy(latest_scanned_jewel)
-    if not jewel or not jewel.get("stats"):
-        AUTOFILL_LOCK.release()
-        print(f"[{HOTKEY_AUTOFILL.upper()} cancelled] No valid jewel is stored. Hover over a jewel and press [{HOTKEY_SCAN.upper()}] first.")
-        return
-
     original_clipboard = None
     try:
-        print("\\n" + "=" * 55)
+        # Take one immutable-in-practice snapshot. A new F7 scan cannot change
+        # the values midway through this F9 run.
+        jewel = copy.deepcopy(latest_scanned_jewel)
+        if not jewel or not jewel.get("stats"):
+            print(f"[{HOTKEY_AUTOFILL.upper()} cancelled] No valid jewel is stored. Press [{HOTKEY_SCAN.upper()}] first.")
+            return
+
+        # Save clipboard before any paste. If it cannot be read, do not type.
+        try:
+            original_clipboard = pyperclip.paste()
+        except Exception as exc:
+            raise RuntimeError(f"Cannot read clipboard; autofill was not started: {exc}")
+
+        print("\n" + "=" * 55)
         print(f"⌨️  [{HOTKEY_AUTOFILL.upper()} Triggered] Keyboard Autofill Mode")
         print("=" * 55)
-        print("\\n【請注意】請在 4 秒內將視窗切換到 Traderie 網頁！")
-        print("請將游標點擊在網頁第一個屬性搜尋欄位 (例如 Modifier / Search properties 搜尋框)。")
-        print("若要中止，隨時按 Esc；也可將滑鼠移至螢幕左上角觸發安全停止。")
+        print("\n【請注意】請在 4 秒內將視窗切換到 Traderie 網頁！")
+        print("請先點擊第一個屬性搜尋欄位 (Modifier / Search properties)。")
+        print("若要中止，隨時按 Esc；將滑鼠移至螢幕左上角也可觸發安全停止。")
 
         for i in range(4, 0, -1):
             _check_autofill_abort()
             print(f"倒數 {i} 秒...")
             _autofill_wait(1)
 
-        # Preserve whatever was on the clipboard before the first paste.
-        try:
-            original_clipboard = pyperclip.paste()
-        except Exception as clipboard_err:
-            raise RuntimeError(f"Cannot read clipboard before autofill: {clipboard_err}")
-
-        print("開始自動填寫...")
         stats = jewel["stats"]
-    
-        print("\n【請注意】請在 4 秒內將視窗切換到 Traderie 網頁！")
-        print("請將游標點擊在網頁第一個屬性搜尋欄位 (例如 Modifier / Search properties 搜尋框)。")
-    
-        for i in range(4, 0, -1):
-            print(f"倒數 {i} 秒...")
-            _autofill_wait(1)
-    
         print("開始自動填寫...")
-        _autofill_press('tab')
-        _autofill_wait(1)
-        _autofill_press('tab')    
-        _autofill_wait(1)
-        _autofill_press('tab')    
-        _autofill_wait(1)
-        _autofill_press('tab')    
-        _autofill_wait(1)
-    
+
+        # Keep the currently user-tested Traderie tab sequence unchanged.
+        for _ in range(4):
+            _autofill_press("tab")
+            _autofill_wait(1)
+
         print("Start")
         _autofill_wait(1)
-        
+
         print("Non Ladder")
-    #    pyautogui.write("Non Ladder")
-    #    _autofill_press('enter')       # 選取該屬性
-        _autofill_press('tab')
+        # League selector intentionally remains skipped, as in the current flow.
+        _autofill_press("tab")
         _autofill_wait(0.5)
-    
-    
-        print("rare")    
-        pyautogui.write("rare")
-        _autofill_press('enter')       # 選取該屬性
-        _autofill_press('tab')
+
+        print("rare")
+        _autofill_paste("rare")
+        _autofill_wait(0.2)
+        _autofill_press("enter")
+        _autofill_wait(0.2)
+        _autofill_press("tab")
         _autofill_wait(0.5)
-    
-     #   pyautogui.write("PC")
-     #   _autofill_press('enter')       # 選取該屬性
-        _autofill_press('tab')
+
+        # Platform selector intentionally remains skipped.
+        _autofill_press("tab")
         _autofill_wait(0.5)
-    
+
         print("middle already in sc")
         _autofill_wait(0.5)
-    
-    #    pyautogui.write("softcore")
-    #    _autofill_press('enter')       # 選取該屬性
-        _autofill_press('tab')
+
+        # Mode selector intentionally remains skipped.
+        _autofill_press("tab")
         _autofill_wait(0.5)
-    
-        _autofill_press('tab')
+        _autofill_press("tab")
         _autofill_wait(0.5)
         print("middle prepare to enter warlock")
-        _autofill_press('tab')
-    #    pyautogui.write("reign of warlock")
-    #    _autofill_press('enter')       # 選取該屬性
+        _autofill_press("tab")
         _autofill_wait(0.5)
-    
-        # 4. 屬性 required level: 1 poison damage
-        pyautogui.write("required level")
-        _autofill_wait(0.5)               # 等待網頁下拉選單出現
-        _autofill_press('enter')       # 選取該屬性
+
+        # Intentional business rule: every jewel listing uses Required Level 1.
+        _autofill_paste("required level")
         _autofill_wait(0.5)
-        _autofill_hotkey('shift', 'tab')
+        _autofill_press("enter")
         _autofill_wait(0.5)
-        _autofill_hotkey('shift', 'tab')    
+        _autofill_hotkey("shift", "tab")
         _autofill_wait(0.5)
-        pyautogui.write("1")    
+        _autofill_hotkey("shift", "tab")
         _autofill_wait(0.5)
-        _autofill_press('tab')
+        _autofill_paste("1")
         _autofill_wait(0.5)
-        _autofill_press('tab')    
+        _autofill_press("tab")
         _autofill_wait(0.5)
-    
-        print("\n開始自動輸入屬性 (按照您實測驗證的精確按鍵順序)...")
-        for idx, s in enumerate(stats):
-            kw = s.get("searchKeyword") or s.get("traderieOption", "")
-            clean_kw = re.sub(r"[+\-~*]?X%?", "", kw).strip()
-            print(f"\n[{idx+1}/{len(stats)}] 正在填寫: '{s.get('statName', clean_kw)}'")
-            print(f"   1. 輸入屬性名稱: '{clean_kw}' 並按 Enter")
-    
-            # 1. 貼上純淨屬性關鍵字 (使用 Ctrl+V 避免輸入法吃字)
-            _autofill_paste(clean_kw)
+        _autofill_press("tab")
+        _autofill_wait(0.5)
+
+        print("\n開始自動輸入屬性 (按照您實測驗證的按鍵順序)...")
+        for idx, stat in enumerate(stats):
+            _check_autofill_abort()
+            keyword = stat.get("searchKeyword") or stat.get("traderieOption", "")
+            clean_keyword = re.sub(r"[+\-~*]?X%?", "", keyword).strip()
+            print(f"\n[{idx + 1}/{len(stats)}] 正在填寫: '{stat.get('statName', clean_keyword)}'")
+
+            _autofill_paste(clean_keyword)
             _autofill_wait(0.5)
-    
-            # 2. 按 Enter 選取該屬性
             _autofill_press("enter")
             _autofill_wait(0.4)
-    
-            # 3. 按 Shift + Tab 兩次進入該屬性的數值輸入欄位
-            print(f"   2. 按 Shift+Tab 兩次進入數值欄位，填入數值: {s['value']}")
+
             _autofill_hotkey("shift", "tab")
             _autofill_wait(0.25)
             _autofill_hotkey("shift", "tab")
             _autofill_wait(0.25)
-    
-            # 4. 輸入數值
-            pyperclip.copy(str(s["value"]))
-            _autofill_hotkey("ctrl", "v")
+
+            _autofill_paste(stat["value"])
             _autofill_wait(0.3)
-    
-            # 5. 按 Tab 兩次回到屬性搜尋輸入框 (每個屬性包含最後一個都要執行，確保游標回到屬性輸入框)
-            print("   3. 按 Tab 兩次回到屬性輸入框...")
+
+            # Return focus to the next modifier search field.
             _autofill_press("tab")
             _autofill_wait(0.25)
             _autofill_press("tab")
             _autofill_wait(0.3)
-    
-        # 6. 所有屬性填寫完畢，游標停留在屬性輸入框：按 Tab 四次進入價格區域
-        print("\n所有屬性填寫完畢，游標位於屬性輸入框，按 Tab 四次進入價格區...")
+
+        print("\n所有屬性填寫完畢，按 Tab 四次進入價格區...")
         for _ in range(4):
             _autofill_press("tab")
             _autofill_wait(0.25)
-    
-        # 7. 填寫貨幣 (例如 Jah) 並按 Enter
+
         price = jewel.get("price", {})
-        qty = price.get("quantity", 2)
+        quantity = price.get("quantity", 2)
         currency = price.get("currency", "Jah")
-    
+
         print(f"-> 選擇貨幣: {currency} 並按 Enter")
         _autofill_paste(currency)
         _autofill_wait(0.6)
         _autofill_press("enter")
         _autofill_wait(0.4)
-    
-        # 8. 按 Tab 三次進入價格數值欄位 (根據實測為 3 次 Tab)
+
         print("-> 按 Tab 三次進入價格數值欄位...")
         for _ in range(3):
             _autofill_press("tab")
             _autofill_wait(0.25)
-    
-        # 9. 填寫價格數量
-        print(f"-> 填寫價格數量: {qty}")
-        pyperclip.copy(str(qty))
-        _autofill_hotkey("ctrl", "v")
+
+        print(f"-> 填寫價格數量: {quantity}")
+        _autofill_paste(quantity)
         _autofill_wait(0.3)
         _autofill_press("enter")
-        print(f"\n✅ [{HOTKEY_AUTOFILL.upper()} 完成] 屬性與價格已全數填寫完成！請檢查網頁內容並確認發布。")
-    
+
+        print(f"\n✅ [{HOTKEY_AUTOFILL.upper()} 完成] 請檢查所有欄位，再手動確認發布。")
+
     except AutofillAborted as exc:
-        print(f"\\n[F9 stopped] {exc}. Stop and inspect the form before continuing.")
+        print(f"\n[F9 stopped] {exc}. 請檢查目前表單後再繼續。")
     except pyautogui.FailSafeException:
-        print("\\n[F9 stopped] PyAutoGUI failsafe triggered. Stop and inspect the form before continuing.")
+        print("\n[F9 stopped] PyAutoGUI failsafe triggered. 請檢查目前表單後再繼續。")
     except Exception as exc:
-        print(f"\\n[F9 error] Autofill stopped: {exc}. Inspect the form before continuing.")
+        print(f"\n[F9 error] Autofill stopped: {exc}. 請檢查目前表單後再繼續。")
     finally:
         if original_clipboard is not None:
             try:
                 pyperclip.copy(original_clipboard)
-            except Exception as clipboard_err:
-                print(f"[Clipboard warning] Could not restore the original clipboard: {clipboard_err}")
+            except Exception as exc:
+                print(f"[Clipboard warning] Could not restore the original clipboard: {exc}")
         AUTOFILL_LOCK.release()
 
 
