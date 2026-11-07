@@ -18,8 +18,8 @@ export default function App() {
   const [activeJewel, setActiveJewel] = useState<ParsedJewel>(SAMPLE_JEWELS[0].parsed);
 
   const [scriptConfig, setScriptConfig] = useState<ScriptConfig>({
-    hotkeyCapture: 'f10',
-    hotkeyFill: 'f9',
+    hotkeyScan: 'f9',
+    hotkeyAutofill: 'f10',
     tesseractPath: 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe',
     autoPriceEnabled: true,
     basePriceJah: 2,
@@ -91,7 +91,7 @@ export default function App() {
             <span className="w-2 h-2 rounded-full bg-amber-500" />
             <span>D2R to Traderie Auto-Lister Pro</span>
             <span>•</span>
-            <span className="text-zinc-400">Exocet OCR + F9 Auto-Type</span>
+            <span className="text-zinc-400">F9 Exocet OCR + F10 Auto-Type</span>
           </div>
 
           <div className="flex items-center space-x-4">

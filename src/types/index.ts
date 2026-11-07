@@ -36,8 +36,8 @@ export interface ParsedJewel {
 }
 
 export interface ScriptConfig {
-  hotkeyCapture: string;
-  hotkeyFill: string;
+  hotkeyScan: string;
+  hotkeyAutofill: string;
   tesseractPath: string;
   autoPriceEnabled: boolean;
   basePriceJah: number;
