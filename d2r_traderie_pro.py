@@ -6,8 +6,8 @@
   1. High-Precision Tooltip Cropping (Cursor-aware & adaptive thresholding)
   2. Full D2R Exocet Font Dictionary & De-noising (IAS, ED, Resists, Life, Str, Dex, FHR, -Req)
   3. No More Hardcoded Dummy Stats (Dynamic affix extraction)
-  4. F10 Capture & Parse: scan the jewel tooltip, OCR, and store the result
-  5. F9 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
+  4. F9 Capture & Parse: scan the jewel tooltip, OCR, and store the result
+  5. F10 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
 ================================================================================
 """
 
@@ -39,8 +39,8 @@ except ImportError:
 # CONFIGURATION
 # ==============================================================================
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-HOTKEY_CAPTURE = "f10"
-HOTKEY_TYPING_FALLBACK = "f9"
+HOTKEY_SCAN = "f9"
+HOTKEY_AUTOFILL = "f10"
 DEFAULT_LEAGUE = "Non-Ladder"   # "Non-Ladder" or "Ladder"
 DEFAULT_MODE = "Softcore"       # "Softcore" or "Hardcore"
 DEFAULT_PLATFORM = "PC"         # "PC", "PlayStation", "Xbox", "Switch"
@@ -53,7 +53,7 @@ if os.path.exists(TESSERACT_PATH):
 else:
     print(f"[Notice] Tesseract path '{TESSERACT_PATH}' not found directly. Will use PATH if configured.")
 
-# Only a successful F10 scan may populate this value. Never prefill demo data.
+# Only a successful scan may populate this value. Never prefill demo data.
 latest_scanned_jewel = None
 
 
@@ -443,11 +443,11 @@ def parse_d2r_jewel(ocr_text):
     }
 
 
-def on_capture_pressed():
+def on_scan_pressed():
     global latest_scanned_jewel
     try:
         print("\n" + "=" * 55)
-        print("📸 [F10 Triggered] Scanning D2R Jewel at Mouse Cursor...")
+        print(f"📸 [{HOTKEY_SCAN.upper()} Triggered] Scanning D2R Jewel at Mouse Cursor...")
         print("=" * 55)
 
         # 1. Capture anchored at mouse cursor
@@ -503,21 +503,21 @@ def on_capture_pressed():
                 print(f"   • {s['display']}  --> [Traderie: '{s['traderieOption']}']")
         print(f"💰 Auto Price: {parsed_data['price']['quantity']} {parsed_data['price']['currency']}")
         print("========================================================")
-        print(f"✅ Ready! Press [{HOTKEY_TYPING_FALLBACK.upper()}] to auto-type this jewel into Traderie.")
+        print(f"✅ Ready! Press [{HOTKEY_AUTOFILL.upper()}] to auto-type this jewel into Traderie.")
 
     except Exception as e:
         print(f"[Error during scan] {e}")
 
 
-def on_typing_fallback_pressed():
+def on_autofill_pressed():
     global latest_scanned_jewel
 
     print("\n" + "=" * 55)
-    print("⌨️  [F9 Triggered] Keyboard Autofill Mode")
+    print(f"⌨️  [{HOTKEY_AUTOFILL.upper()} Triggered] Keyboard Autofill Mode")
     print("=" * 55)
 
     if not latest_scanned_jewel or not latest_scanned_jewel.get("stats"):
-        print("[F9 cancelled] No valid jewel is stored. Hover over a jewel and press [F10] first.")
+        print(f"[{HOTKEY_AUTOFILL.upper()} cancelled] No valid jewel is stored. Hover over a jewel and press [{HOTKEY_SCAN.upper()}] first.")
         return
 
     stats = latest_scanned_jewel["stats"]
@@ -594,7 +594,7 @@ def on_typing_fallback_pressed():
     pyautogui.hotkey("ctrl", "v")
     time.sleep(0.3)
     pyautogui.press("enter")
-    print("\n✅ [F9 完成] 屬性與價格已全數填寫完成！請檢查網頁內容並確認發布。")
+    print(f"\n✅ [{HOTKEY_AUTOFILL.upper()} 完成] 屬性與價格已全數填寫完成！請檢查網頁內容並確認發布。")
 
 
 if __name__ == "__main__":
@@ -604,15 +604,15 @@ if __name__ == "__main__":
     print("📌 Instructions:")
     print("   1. Open Diablo II: Resurrected in Windowed or Borderless Window.")
     print("   2. Hover over any Jewel or Item in your inventory or stash.")
-    print(f"   3. Press [{HOTKEY_CAPTURE.upper()}] to scan, crop & parse stats.")
+    print(f"   3. Press [{HOTKEY_SCAN.upper()}] to scan, crop & parse stats.")
     print("   4. Switch to the Traderie create-listing page, click the first")
-    print(f"      modifier search field, then press [{HOTKEY_TYPING_FALLBACK.upper()}] to auto-fill.")
+    print(f"      modifier search field, then press [{HOTKEY_AUTOFILL.upper()}] to auto-fill.")
     print("   5. Press [Ctrl + C] in this console to exit.")
     print("=" * 64)
 
-    keyboard.add_hotkey(HOTKEY_CAPTURE, on_capture_pressed)
-    keyboard.add_hotkey(HOTKEY_TYPING_FALLBACK, on_typing_fallback_pressed)
-    print(f"[*] Listening for [{HOTKEY_CAPTURE.upper()}] / [{HOTKEY_TYPING_FALLBACK.upper()}] hotkeys... Ready!")
+    keyboard.add_hotkey(HOTKEY_SCAN, on_scan_pressed)
+    keyboard.add_hotkey(HOTKEY_AUTOFILL, on_autofill_pressed)
+    print(f"[*] Listening for [{HOTKEY_SCAN.upper()}] / [{HOTKEY_AUTOFILL.upper()}] hotkeys... Ready!")
     try:
         keyboard.wait()
     except KeyboardInterrupt:

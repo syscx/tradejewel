@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 <ol className="list-decimal list-inside space-y-1.5 text-zinc-300">
                   <li>Unzip your downloaded folder.</li>
                   <li>Double-click <code className="text-amber-300 bg-zinc-900 px-1 py-0.5 rounded">install_requirements.bat</code> to install packages.</li>
-                  <li>Right-click <code className="text-amber-300 bg-zinc-900 px-1 py-0.5 rounded">run_assistant.bat</code> and select <b>"Run as administrator"</b> (admin rights needed for global F10 key hook).</li>
+                  <li>Right-click <code className="text-amber-300 bg-zinc-900 px-1 py-0.5 rounded">run_assistant.bat</code> and select <b>"Run as administrator"</b> (admin rights needed for global F9/F10 key hooks).</li>
                 </ol>
               </div>
 
@@ -134,8 +134,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 <div className="font-semibold text-amber-300">🎮 Required Game &amp; Browser Setup:</div>
                 <ul className="list-disc list-inside space-y-1 text-zinc-300">
                   <li>In D2R Options → Video: Set to <b>Windowed</b> or <b>Borderless Windowed</b>.</li>
-                  <li>Hover mouse over any jewel in D2R and press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F10</kbd> to scan it.</li>
-                  <li>Switch to the Traderie listing page, click the first modifier search field, then press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F9</kbd> to auto-fill.</li>
+                  <li>Hover mouse over any jewel in D2R and press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F9</kbd> to scan it.</li>
+                  <li>Switch to the Traderie listing page, click the first modifier search field, then press <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400">F10</kbd> to auto-fill.</li>
                 </ul>
               </div>
             </div>

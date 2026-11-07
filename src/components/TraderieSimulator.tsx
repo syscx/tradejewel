@@ -48,7 +48,7 @@ export const TraderieSimulator: React.FC<TraderieSimulatorProps> = ({ jewel }) =
     setIsSimulating(true);
     setIsSuccess(false);
     setActiveStep(1);
-    setSimulationLogs(['[0.00s] Received D2R Jewel Payload from F10 scan...']);
+    setSimulationLogs(['[0.00s] Received D2R Jewel Payload from F9 scan...']);
 
     // Step 1: Set category & rarity
     setTimeout(() => {
@@ -105,7 +105,7 @@ export const TraderieSimulator: React.FC<TraderieSimulatorProps> = ({ jewel }) =
             </h3>
           </div>
           <p className="text-xs text-zinc-400 mt-1">
-            Experience how F10 + F9 fills Traderie's listing form via clipboard paste with zero typing errors.
+            Experience how F9 + F10 fills Traderie's listing form via clipboard paste with zero typing errors.
           </p>
         </div>
 
