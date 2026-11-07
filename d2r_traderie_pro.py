@@ -6,8 +6,8 @@
   1. High-Precision Tooltip Cropping (Cursor-aware & adaptive thresholding)
   2. Full D2R Exocet Font Dictionary & De-noising (IAS, ED, Resists, Life, Str, Dex, FHR, -Req)
   3. No More Hardcoded Dummy Stats (Dynamic affix extraction)
-  4. F9 Capture & Parse: scan the jewel tooltip, OCR, and store the result
-  5. F10 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
+  4. F7 Capture & Parse: scan the jewel tooltip, OCR, and store the result
+  5. F9 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
 ================================================================================
 """
 
@@ -39,8 +39,8 @@ except ImportError:
 # CONFIGURATION
 # ==============================================================================
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-HOTKEY_SCAN = "f9"
-HOTKEY_AUTOFILL = "f10"
+HOTKEY_SCAN = "f7"
+HOTKEY_AUTOFILL = "f9"
 DEFAULT_LEAGUE = "Non-Ladder"   # "Non-Ladder" or "Ladder"
 DEFAULT_MODE = "Softcore"       # "Softcore" or "Hardcore"
 DEFAULT_PLATFORM = "PC"         # "PC", "PlayStation", "Xbox", "Switch"
@@ -528,6 +528,69 @@ def on_autofill_pressed():
     for i in range(4, 0, -1):
         print(f"倒數 {i} 秒...")
         time.sleep(1)
+
+    print("開始自動填寫...")
+    pyautogui.press('tab')
+    time.sleep(1)
+    pyautogui.press('tab')    
+    time.sleep(1)
+    pyautogui.press('tab')    
+    time.sleep(1)
+    pyautogui.press('tab')    
+    time.sleep(1)
+
+    print("Start")
+    time.sleep(1)
+    
+    print("Non Ladder")
+#    pyautogui.write("Non Ladder")
+#    pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+
+    print("rare")    
+    pyautogui.write("rare")
+    pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+ #   pyautogui.write("PC")
+ #   pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+    print("middle already in sc")
+    time.sleep(0.5)
+
+#    pyautogui.write("softcore")
+#    pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+    pyautogui.press('tab')
+    time.sleep(0.5)
+    print("middle prepare to enter warlock")
+    pyautogui.press('tab')
+#    pyautogui.write("reign of warlock")
+#    pyautogui.press('enter')       # 選取該屬性
+    time.sleep(0.5)
+
+    # 4. 屬性 required level: 1 poison damage
+    pyautogui.write("required level")
+    time.sleep(0.5)               # 等待網頁下拉選單出現
+    pyautogui.press('enter')       # 選取該屬性
+    time.sleep(0.5)
+    pyautogui.hotkey('shift', 'tab')
+    time.sleep(0.5)
+    pyautogui.hotkey('shift', 'tab')    
+    time.sleep(0.5)
+    pyautogui.write("1")    
+    time.sleep(0.5)
+    pyautogui.press('tab')
+    time.sleep(0.5)
+    pyautogui.press('tab')    
+    time.sleep(0.5)
 
     print("\n開始自動輸入屬性 (按照您實測驗證的精確按鍵順序)...")
     for idx, s in enumerate(stats):

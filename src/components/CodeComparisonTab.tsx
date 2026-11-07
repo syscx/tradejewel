@@ -10,8 +10,8 @@ export const CodeComparisonTab: React.FC = () => {
       title: 'Traderie Input Automation (The Core Goal)',
       flaw: 'Blind PyAutoGUI Keystrokes & Hardcoded Sleep',
       flawDesc: 'Your original code used 20+ sequential `pyautogui.press("tab")` and `time.sleep(0.5)`. On Traderie (a dynamic React SPA), any dropdown animation lag, cookies banner, or DOM update causes tabs to de-sync, typing numbers into random boxes or breaking the listing.',
-      fix: 'Clipboard-Paste Auto-Typing (F10)',
-      fixDesc: 'F9 scans and parses the jewel into memory. F10 then walks the Traderie form with Tab/Shift+Tab and pastes each value via Ctrl+V, which is immune to IME interference and avoids blind coordinate guessing.',
+      fix: 'Clipboard-Paste Auto-Typing (F9)',
+      fixDesc: 'F7 scans and parses the jewel into memory. F9 then walks the Traderie form with Tab/Shift+Tab and pastes each value via Ctrl+V, which is immune to IME interference and avoids blind coordinate guessing.',
     },
     {
       title: 'Hardcoded Stats Bug',
@@ -39,7 +39,7 @@ export const CodeComparisonTab: React.FC = () => {
       flaw: '`pyautogui.write()` corrupted by IME',
       flawDesc: 'Your original code noted: "確保輸入法為英文半形". If the user had a Chinese/CJK input method active, `pyautogui.write()` would trigger phonetic menus or drop characters.',
       fix: 'Clipboard Paste (Ctrl+V) Auto-Typing',
-      fixDesc: 'F10 copies each value to the clipboard and pastes it with Ctrl+V instead of typing characters, so Chinese/CJK input methods cannot corrupt the input.',
+      fixDesc: 'F9 copies each value to the clipboard and pastes it with Ctrl+V instead of typing characters, so Chinese/CJK input methods cannot corrupt the input.',
     },
   ];
 

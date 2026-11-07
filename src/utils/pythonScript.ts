@@ -9,8 +9,8 @@ export function generatePythonScript(config: ScriptConfig): string {
   1. High-Precision Tooltip Cropping (Cursor-aware & adaptive thresholding)
   2. Full D2R Exocet Font Dictionary & De-noising (IAS, ED, Resists, Life, Str, Dex, FHR, -Req)
   3. No More Hardcoded Dummy Stats (Dynamic affix extraction)
-  4. F9 Capture & Parse: scan the jewel tooltip, OCR, and store the result
-  5. F10 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
+  4. F7 Capture & Parse: scan the jewel tooltip, OCR, and store the result
+  5. F9 Auto-Type: fill the Traderie form via clipboard paste (IME-safe)
 ================================================================================
 """
 
