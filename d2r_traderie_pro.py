@@ -529,6 +529,69 @@ def on_autofill_pressed():
         print(f"倒數 {i} 秒...")
         time.sleep(1)
 
+    print("開始自動填寫...")
+    pyautogui.press('tab')
+    time.sleep(1)
+    pyautogui.press('tab')    
+    time.sleep(1)
+    pyautogui.press('tab')    
+    time.sleep(1)
+    pyautogui.press('tab')    
+    time.sleep(1)
+
+    print("Start")
+    time.sleep(1)
+    
+    print("Non Ladder")
+#    pyautogui.write("Non Ladder")
+#    pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+
+    print("rare")    
+    pyautogui.write("rare")
+    pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+ #   pyautogui.write("PC")
+ #   pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+    print("middle already in sc")
+    time.sleep(0.5)
+
+#    pyautogui.write("softcore")
+#    pyautogui.press('enter')       # 選取該屬性
+    pyautogui.press('tab')
+    time.sleep(0.5)
+
+    pyautogui.press('tab')
+    time.sleep(0.5)
+    print("middle prepare to enter warlock")
+    pyautogui.press('tab')
+#    pyautogui.write("reign of warlock")
+#    pyautogui.press('enter')       # 選取該屬性
+    time.sleep(0.5)
+
+    # 4. 屬性 required level: 1 poison damage
+    pyautogui.write("required level")
+    time.sleep(0.5)               # 等待網頁下拉選單出現
+    pyautogui.press('enter')       # 選取該屬性
+    time.sleep(0.5)
+    pyautogui.hotkey('shift', 'tab')
+    time.sleep(0.5)
+    pyautogui.hotkey('shift', 'tab')    
+    time.sleep(0.5)
+    pyautogui.write("1")    
+    time.sleep(0.5)
+    pyautogui.press('tab')
+    time.sleep(0.5)
+    pyautogui.press('tab')    
+    time.sleep(0.5)
+
     print("\n開始自動輸入屬性 (按照您實測驗證的精確按鍵順序)...")
     for idx, s in enumerate(stats):
         kw = s.get("searchKeyword") or s.get("traderieOption", "")
